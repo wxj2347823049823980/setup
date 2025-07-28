@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stando Setup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            background-image: url('https://cdn.discordapp.com/attachments/1381721708851105918/1399385178186448976/7b1edc9b51d44b6748995b0949a7055e.gif?ex=6888ce81&is=68877d01&hm=529e65415b55ae1c8c9761b3c2abd5169a853a716d42276dfcb77878d2736c69&'); /* Placeholder GIF */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .container {
+            background-color: rgba(28, 28, 28, 0.9);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 700px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        .input-field {
+            background-color: #333333;
+            border: 1px solid #4a4a4a;
+            color: #e2e8f0;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease-in-out, background-color 0.3s ease, color 0.3s ease;
+            text-align: center;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #63b3ed;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+        .generate-button {
+            background-color: #4299e1;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .generate-button:hover {
+            background-color: #3182ce;
+            transform: translateY(-1px);
+        }
+        .generate-button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        .code-output {
+            background-color: #0a0a0a;
+            border: 1px solid #4a4a4a;
+            color: #a0aec0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            min-height: 200px;
+            resize: vertical;
+            overflow-y: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body.light-mode {
+            background-color: #f7fafc;
+            background-image: none;
+            color: #2d3748;
+        }
+        body.light-mode .container {
+            background-color: #ffffff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        body.light-mode .input-field {
+            background-color: #edf2f7;
+            border-color: #cbd5e0;
+            color: #2d3748;
+        }
+        body.light-mode .input-field:focus {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+        body.light-mode .generate-button {
+            background-color: #4299e1;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        body.light-mode .generate-button:hover {
+            background-color: #3182ce;
+        }
+        body.light-mode .code-output {
+            background-color: #e2e8f0;
+            border-color: #cbd5e0;
+            color: #4a5568;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #e2e8f0;
+            transition: color 0.3s ease;
+        }
+        body.light-mode .theme-toggle {
+            color: #2d3748;
+        }
+        .code-output-container {
+            position: relative;
+            width: 100%;
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #4299e1;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s ease-in-out;
+            z-index: 10;
+        }
+        .copy-button:hover {
+            background-color: #3182ce;
+        }
+        .copy-button:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container flex flex-col items-center space-y-6">
+        <button id="themeToggle" class="theme-toggle">
+            ☀️
+        </button>
+
+        <h1 class="text-3xl font-bold text-center mb-4">Stando Setup</h1>
+
+        <div class="w-full">
+            <label for="usernameInput" class="block text-sm font-medium mb-2 text-center">Owner's Username:</label>
+            <input
+                type="text"
+                id="usernameInput"
+                placeholder="..."
+                class="input-field"
+            />
+        </div>
+
+        <button id="generateButton" class="generate-button w-full md:w-auto">
+            Generate
+        </button>
+
+        <div class="w-full code-output-container">
+            <label for="codeOutput" class="block text-sm font-medium mb-2">Generated Code:</label>
+            <textarea
+                id="codeOutput"
+                readonly
+                class="code-output w-full"
+                rows="15"
+                placeholder="script..."
+            ></textarea>
+            <button id="copyButton" class="copy-button">Copy</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const usernameInput = document.getElementById('usernameInput');
+            const generateButton = document.getElementById('generateButton');
+            const codeOutput = document.getElementById('codeOutput');
+            const themeToggle = document.getElementById('themeToggle');
+            const copyButton = document.getElementById('copyButton');
+            const body = document.body;
+
+            const adjustTextareaHeight = (element) => {
+                element.style.height = 'auto';
+                element.style.height = element.scrollHeight + 'px';
+            };
+
+            const typeText = (element, text, delay = 10) => {
+                let i = 0;
+                element.value = '';
+                adjustTextareaHeight(element);
+                const interval = setInterval(() => {
+                    if (i < text.length) {
+                        element.value += text.charAt(i);
+                        adjustTextareaHeight(element);
+                        element.scrollTop = element.scrollHeight;
+                        i++;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, delay);
+            };
+
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'light') {
+                body.classList.add('light-mode');
+                themeToggle.textContent = '�';
+            } else {
+                themeToggle.textContent = '☀️';
+            }
+
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('light-mode');
+                if (body.classList.contains('light-mode')) {
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.textContent = '🌙';
+                } else {
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.textContent = '☀️';
+                }
+            });
+
+            generateButton.addEventListener('click', () => {
+                const username = usernameInput.value.trim();
+                let ownerLine = 'getgenv().Owner = "DragonballZ10098"';
+
+                if (username) {
+                    ownerLine = `getgenv().Owner = "${username}"`;
+                }
+
+                const generatedCode = `getgenv()._="Join discord.gg/msgabv2t9Q | discord.gg/stando to get latest update ok bai >.+ | If you pay for this script you get scammed, this script is completely free ok"
+${ownerLine}
+getgenv().Configuration = {
+['Fps'] = 45,
+['Msg'] = 'Yare Yare Daze.',
+['CrewID'] = 32570691,
+['Attack'] = 'Heavy',
+['TPMode'] = 'Cart',
+['GunMode'] = 'Aug',
+['FlyMode'] = 'Glide',
+['Position'] = 'Back',
+['Resolver'] = false,
+['ChatCmds'] = true,
+['AutoMask'] = true,
+['MaskMode'] = 'Riot',
+['AntiStomp'] = true,
+['StandMode'] = 'Star Platinum : OverHeaven',
+['Smoothing'] = false,
+['AttackMode'] = 'Sky',
+['CustomName'] = 'Owner',
+['Hidescreen'] = false,
+['SummonPoses'] = 'Pose3',
+['LowGraphics'] = false,
+['CustomPrefix'] = '.',
+['CustomSummon'] = 'Summon!',
+['AutoPrediction'] = false,
+['AttackDistance'] = 75,
+['AutoSaveLocation'] = 'Downhill_Rooftop',
+['AttackPrediction'] = 0.34,
+['AttackAutoPrediction'] = 0.23,
+['Sounds'] = true,
+['CustomSong'] = 123456,
+['SummonMusic'] = true,
+['SummonMusicID'] = 'Default'
+}loadstring(game:HttpGet("https://xk5ng.github.io/V5.0"))()`;
+
+                typeText(codeOutput, generatedCode);
+            });
+
+            copyButton.addEventListener('click', () => {
+                codeOutput.select();
+                try {
+                    document.execCommand('copy');
+                    copyButton.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyButton.textContent = 'Copy';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                }
+            });
+
+            adjustTextareaHeight(codeOutput);
+        });
+    </script>
+</body>
+</html>
